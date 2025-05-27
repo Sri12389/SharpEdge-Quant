@@ -1,0 +1,35 @@
+# Build artifacts
+build/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.o
+*.a
+*.dll
+
+# Distribution / packaging
+dist/
+*.egg-info/
+
+# Data files
+data/*.csv
+data/*.png
+
+# Environment
+.env
+.venv
+env/
+venv/
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+*.log
+
+# Node modules
+node_modules/
