@@ -1,0 +1,39 @@
+# Version control
+.git
+.gitignore
+.gitattributes
+
+# Dependencies
+node_modules
+build
+dist
+
+# Development files
+.vscode
+.idea
+*.log
+*.pyc
+__pycache__
+.pytest_cache
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Data and models
+data/*
+!data/.gitkeep
+models/*
+!models/.gitkeep
+
+# Documentation
+README.md
+CHANGELOG.md
+docs/
+
+# Docker
+Dockerfile
+frontend.Dockerfile
+docker-compose.yml
+.dockerignore
