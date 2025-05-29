@@ -1,14 +1,31 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { LineChart, TrendingUp } from 'lucide-react';
 import { StrategySelector } from './components/StrategySelector';
 import { PriceChart } from './components/PriceChart';
 import { EquityChart } from './components/EquityChart';
 import { PerformanceMetrics } from './components/PerformanceMetrics';
+import { Auth } from './components/Auth';
+import { supabase } from './lib/supabase';
 import { BacktestResults } from './types';
 
 function App() {
   const [strategy, setStrategy] = useState('random_forest');
   const [results, setResults] = useState<BacktestResults | null>(null);
+  const [session, setSession] = useState(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   const fetchResults = async () => {
     try {
@@ -19,6 +36,10 @@ function App() {
       console.error('Failed to fetch results:', error);
     }
   };
+
+  if (!session) {
+    return <Auth />;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
@@ -31,7 +52,18 @@ function App() {
               SharpEdge Quant Dashboard
             </h1>
           </div>
-          <StrategySelector strategy={strategy} onStrategyChange={setStrategy} />
+          <div className="flex items-center gap-4">
+            <span className="text-sm text-gray-600">
+              Welcome, {session.user.email}
+            </span>
+            <button
+              onClick={() => supabase.auth.signOut()}
+              className="text-sm text-red-600 hover:text-red-500"
+            >
+              Sign out
+            </button>
+            <StrategySelector strategy={strategy} onStrategyChange={setStrategy} />
+          </div>
         </div>
 
         {/* Performance Metrics */}
