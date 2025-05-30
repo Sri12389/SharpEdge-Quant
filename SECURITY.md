@@ -15,7 +15,7 @@ We actively support and patch the latest and most stable versions. Older version
 
 ## 📬 Reporting a Vulnerability
 
-If you discover a security vulnerability, please report it to us at **security@[yourdomain].com** with the following:
+If you discover a security vulnerability, please report it to us at **https://cosmic-caramel-6e5cbd.netlify.app** with the following:
 
 - Detailed description of the issue
 - Steps to reproduce the vulnerability
