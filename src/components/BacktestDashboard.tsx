@@ -3,6 +3,7 @@ import { format } from 'date-fns';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { supabase } from '../lib/supabase';
 import { BacktestResults, EquityPoint, Trade } from '../types';
+import { ErrorBoundary } from './ErrorBoundary';
 
 interface Metrics {
   sharpe: number;
@@ -11,7 +12,16 @@ interface Metrics {
   totalTrades: number;
 }
 
-export default function BacktestDashboard() {
+function ErrorFallback({ error }: { error: Error }) {
+  return (
+    <div className="p-6 bg-red-50 border border-red-200 rounded-lg">
+      <h2 className="text-lg font-semibold text-red-700 mb-2">Something went wrong</h2>
+      <p className="text-red-600">{error.message}</p>
+    </div>
+  );
+}
+
+function Dashboard() {
   const [equityCurve, setEquityCurve] = useState<EquityPoint[]>([]);
   const [metrics, setMetrics] = useState<Metrics | null>(null);
   const [trades, setTrades] = useState<Trade[]>([]);
@@ -163,5 +173,13 @@ export default function BacktestDashboard() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function BacktestDashboard() {
+  return (
+    <ErrorBoundary fallback={<ErrorFallback error={new Error('Something went wrong')} />}>
+      <Dashboard />
+    </ErrorBoundary>
   );
 }
