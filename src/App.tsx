@@ -7,6 +7,7 @@ import { PerformanceMetrics } from './components/PerformanceMetrics';
 import { Auth } from './components/Auth';
 import { supabase } from './lib/supabase';
 import { BacktestResults } from './types';
+import { RunBacktestButton } from './components/RunBacktestButton';
 
 function App() {
   const [strategy, setStrategy] = useState('random_forest');
@@ -28,14 +29,16 @@ function App() {
     return () => subscription.unsubscribe();
   }, []);
 
-  const handleRunBacktest = async () => {
-    try {
-      const response = await fetch('/api/results');
-      const data = await response.json();
-      setResults(data);
-    } catch (error) {
-      console.error('Failed to fetch results:', error);
-    }
+  const handleBacktestComplete = (results: any) => {
+    setResults({
+      signals: [],
+      performance: {
+        return: results.return_pct,
+        sharpe: 0,
+        drawdown: 0
+      },
+      equityCurve: []
+    });
   };
 
   if (!session) {
@@ -112,13 +115,7 @@ function App() {
                       <Settings className="w-4 h-4 mr-2" />
                       Configure Strategy
                     </button>
-                    <button
-                      onClick={handleRunBacktest}
-                      className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
-                    >
-                      Run Backtest
-                      <ArrowRight className="w-4 h-4 ml-2" />
-                    </button>
+                    <RunBacktestButton onComplete={handleBacktestComplete} />
                   </div>
 
                   {isConfigOpen && (
